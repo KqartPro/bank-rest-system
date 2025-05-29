@@ -7,9 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class CardDto {
-	private Long id;
-	private String maskedNumber;
+public class CardChangeDto {
 	private BigDecimal balance;
 	private LocalDateTime expirationDate;
 	private CardStatus status;

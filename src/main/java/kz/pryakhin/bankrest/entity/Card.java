@@ -26,6 +26,8 @@ public class Card {
 
 	@Column(unique = true)
 	private String encryptedNumber;
+	
+	private String maskedSuffix;
 
 	private LocalDateTime expirationDate;
 
@@ -34,7 +36,7 @@ public class Card {
 
 	private BigDecimal balance;
 
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User owner;
 }
