@@ -16,8 +16,8 @@ import javax.naming.AuthenticationException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
-public class AuthController extends ApiController {
+@RequestMapping("/api/v1/auth")
+public class AuthController {
 	private final AuthService authService;
 
 

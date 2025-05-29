@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-add-masked-suffix-to-cards
+      author: andrey
+      changes:
+        - addColumn:
+            tableName: cards
+            columns:
+              - column:
+                  name: masked_suffix
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false

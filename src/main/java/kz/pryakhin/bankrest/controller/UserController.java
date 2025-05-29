@@ -1,8 +1,8 @@
 package kz.pryakhin.bankrest.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import kz.pryakhin.bankrest.dto.user.UserCreateDto;
 import kz.pryakhin.bankrest.dto.user.UserDto;
 import kz.pryakhin.bankrest.dto.user.UserUpdateDto;
@@ -19,12 +19,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
-public class UserController extends ApiController {
+@RequestMapping("/api/v1/users")
+public class UserController {
 	private final UserService userService;
 
 
 	@GetMapping("/principal")
+	@PreAuthorize("hasRole('USER')")
 	public UserDto getPrincipalUser(Principal principal) {
 		return userService.getUserDtoByEmail(principal.getName());
 	}
@@ -45,7 +46,7 @@ public class UserController extends ApiController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<UserDto> getUsers(
 			@RequestParam(defaultValue = "0") @Min(0) int page,
-			@RequestParam(defaultValue = "10") @Size(min = 1, max = 100) int size,
+			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
 			@RequestParam(required = false) String search
 	) {
 		return userService.getUsers(page, size, search);

@@ -5,9 +5,8 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -31,10 +30,10 @@ public class User implements UserDetails {
 	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	private Collection<Role> roles;
+	private Set<Role> roles;
 
-	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Card> cards = new ArrayList<>();
+//	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+//	private List<Card> cards = new ArrayList<>();
 
 
 	// User Details

@@ -1,14 +1,18 @@
 package kz.pryakhin.bankrest.service;
 
+import jakarta.transaction.Transactional;
 import kz.pryakhin.bankrest.dto.user.UserCreateDto;
 import kz.pryakhin.bankrest.dto.user.UserCredentialsDto;
 import kz.pryakhin.bankrest.dto.user.UserDto;
 import kz.pryakhin.bankrest.dto.user.UserUpdateDto;
+import kz.pryakhin.bankrest.entity.Card;
+import kz.pryakhin.bankrest.entity.CardStatus;
 import kz.pryakhin.bankrest.entity.Role;
 import kz.pryakhin.bankrest.entity.User;
 import kz.pryakhin.bankrest.exception.UserNotFoundException;
 import kz.pryakhin.bankrest.exception.ValidationException;
 import kz.pryakhin.bankrest.mapper.UserMapper;
+import kz.pryakhin.bankrest.repository.CardRepository;
 import kz.pryakhin.bankrest.repository.RoleRepository;
 import kz.pryakhin.bankrest.repository.UserRepository;
 import kz.pryakhin.bankrest.util.ValidationHelper;
@@ -26,6 +30,7 @@ import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +39,10 @@ public class UserService implements UserDetailsService {
 	private final UserMapper userMapper;
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final CardRepository cardRepository;
+
+
+	// Get
 
 
 	public List<UserDto> getUsers(int page, int size, String search) {
@@ -72,6 +81,21 @@ public class UserService implements UserDetailsService {
 	}
 
 
+	public User getUserByCredentials(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
+		Optional<User> optionalUser = userRepository.findByEmail(userCredentialsDto.getEmail());
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+			if (passwordEncoder.matches(userCredentialsDto.getPassword(), user.getPassword())) {
+				return user;
+			}
+		}
+		throw new AuthenticationException("Email or password is not correct");
+	}
+
+
+	// Post
+
+
 	public UserDto createUser(UserCreateDto userCreateDto) throws BadRequestException {
 		if (!ValidationHelper.isEmailValid(userCreateDto.getEmail())) {
 			throw new ValidationException("Invalid email");
@@ -101,23 +125,14 @@ public class UserService implements UserDetailsService {
 		user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
 
 		Optional<Role> optionalRole = roleRepository.findByName("ROLE_USER");
-		optionalRole.ifPresent(role -> user.setRoles(List.of(role)));
+		optionalRole.ifPresent(role -> user.setRoles(Set.of(role)));
 
 		return userMapper.toDto(userRepository.save(user));
 
 	}
 
 
-	public User getUserByCredentials(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
-		Optional<User> optionalUser = userRepository.findByEmail(userCredentialsDto.getEmail());
-		if (optionalUser.isPresent()) {
-			User user = optionalUser.get();
-			if (passwordEncoder.matches(userCredentialsDto.getPassword(), user.getPassword())) {
-				return user;
-			}
-		}
-		throw new AuthenticationException("Email or password is not correct");
-	}
+	// Put
 
 
 	public UserDto updateUser(UserUpdateDto userUpdateDto, Long userId) {
@@ -146,10 +161,27 @@ public class UserService implements UserDetailsService {
 	}
 
 
+	// Delete
+
+
+	@Transactional
 	public void deleteUser(Long userId) {
+		User user = getUserById(userId);
+
+		List<Card> cards = cardRepository.findByOwnerId(userId);
+
+		for (Card card : cards) {
+			card.setStatus(CardStatus.BLOCKED);
+			card.setOwner(null);
+		}
+
+		cardRepository.saveAll(cards);
 		userRepository.deleteById(userId);
 
 	}
+
+
+	// Helpers
 
 
 	@Override
