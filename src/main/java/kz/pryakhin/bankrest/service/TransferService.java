@@ -32,8 +32,8 @@ public class TransferService {
 	public TransferDto transferBetweenOwnCards(TransferCreateDto transferCreateDto, Principal principal) {
 		User user = userService.getUserByEmail(principal.getName());
 
-		Card senderCard = cardService.getCardOrThrow(transferCreateDto.getSenderId());
-		Card recipientCard = cardService.getCardOrThrow(transferCreateDto.getRecipientId());
+		Card senderCard = cardService.getCardOrThrow(transferCreateDto.getSenderCardId());
+		Card recipientCard = cardService.getCardOrThrow(transferCreateDto.getRecipientCardId());
 
 
 		if (senderCard.getOwner() == null || recipientCard.getOwner() == null) {
