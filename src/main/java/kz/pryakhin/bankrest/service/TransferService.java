@@ -50,8 +50,8 @@ public class TransferService {
 
 	@Transactional
 	public TransferDto transferBetweenCards(TransferCreateDto transferCreateDto) {
-		Card senderCard = cardService.getCardOrThrow(transferCreateDto.getSenderId());
-		Card recipientCard = cardService.getCardOrThrow(transferCreateDto.getRecipientId());
+		Card senderCard = cardService.getCardOrThrow(transferCreateDto.getSenderCardId());
+		Card recipientCard = cardService.getCardOrThrow(transferCreateDto.getRecipientCardId());
 
 		return transferHelper(senderCard, recipientCard, transferCreateDto.getAmount());
 	}
