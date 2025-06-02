@@ -42,8 +42,12 @@ dependencies {
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
 	implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: ''
 	implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: ''
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
