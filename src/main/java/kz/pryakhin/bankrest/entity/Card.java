@@ -1,6 +1,7 @@
 package kz.pryakhin.bankrest.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "cards")
 
 @Data
+@AllArgsConstructor
 public class Card {
 
 
@@ -26,7 +28,7 @@ public class Card {
 
 	@Column(unique = true)
 	private String encryptedNumber;
-	
+
 	private String maskedSuffix;
 
 	private LocalDateTime expirationDate;
@@ -39,4 +41,14 @@ public class Card {
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User owner;
+
+
+	public Card(Long id, String maskedSuffix, BigDecimal balance, CardStatus status, User owner) {
+		this.id = id;
+		this.maskedSuffix = maskedSuffix;
+		this.balance = balance;
+		this.status = status;
+		this.owner = owner;
+		this.expirationDate = LocalDateTime.now().plusYears(1);
+	}
 }

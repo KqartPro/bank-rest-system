@@ -6,7 +6,6 @@ import kz.pryakhin.bankrest.dto.jwt.TokensDto;
 import kz.pryakhin.bankrest.dto.user.UserCredentialsDto;
 import kz.pryakhin.bankrest.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,14 +21,9 @@ public class AuthController {
 
 
 	@PostMapping("/login")
-	public ResponseEntity<TokensDto> login(@Valid @RequestBody UserCredentialsDto userCredentialsDto) {
-		try {
-			TokensDto tokensDto = authService.login(userCredentialsDto);
-			return ResponseEntity.ok(tokensDto);
-
-		} catch (AuthenticationException e) {
-			throw new RuntimeException("Authentication failed" + e.getMessage());
-		}
+	public TokensDto login(@Valid @RequestBody UserCredentialsDto userCredentialsDto)
+			throws AuthenticationException {
+		return authService.login(userCredentialsDto);
 	}
 
 

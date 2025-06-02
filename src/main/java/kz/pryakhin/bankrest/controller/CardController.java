@@ -1,5 +1,7 @@
 package kz.pryakhin.bankrest.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import kz.pryakhin.bankrest.dto.card.CardChangeDto;
@@ -26,6 +28,7 @@ public class CardController {
 
 	@GetMapping("/users/{userId}/cards")
 	@PreAuthorize("hasRole('ADMIN')")
+	@Operation(security = @SecurityRequirement(name = "bearerAuth"))
 	public List<CardDto> getUserCards(
 			@PathVariable Long userId,
 			@RequestParam(defaultValue = "0") @Min(0) int page,

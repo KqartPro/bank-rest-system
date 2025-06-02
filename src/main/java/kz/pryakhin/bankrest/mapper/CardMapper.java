@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CardMapper {
-	
+
 	public CardDto toDto(Card card) {
 		CardDto dto = new CardDto();
 
@@ -18,7 +18,7 @@ public class CardMapper {
 		dto.setStatus(card.getStatus());
 
 		if (card.getOwner() != null) {
-			dto.setUserId(card.getOwner().getId());
+			dto.setOwnerId(card.getOwner().getId());
 		}
 		return dto;
 	}
