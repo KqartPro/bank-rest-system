@@ -66,7 +66,7 @@ public class CardController {
 
 	@PatchMapping("/cards/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public CardDto createCard(@PathVariable Long id, @RequestBody CardChangeDto cardChangeDto) {
+	public CardDto updateCard(@PathVariable Long id, @RequestBody CardChangeDto cardChangeDto) {
 		return cardService.updateCard(id, cardChangeDto);
 	}
 

@@ -14,14 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Card {
 
-
-	public Card() {
-		this.expirationDate = LocalDateTime.now().plusYears(1);
-		this.status = CardStatus.ACTIVE;
-		this.balance = BigDecimal.ZERO;
-	}
-
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -41,6 +33,13 @@ public class Card {
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User owner;
+
+
+	public Card() {
+		this.expirationDate = LocalDateTime.now().plusYears(1);
+		this.status = CardStatus.ACTIVE;
+		this.balance = BigDecimal.ZERO;
+	}
 
 
 	public Card(Long id, String maskedSuffix, BigDecimal balance, CardStatus status, User owner) {

@@ -1,0 +1,97 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-insert-test-data
+      author: andrey
+      changes:
+        # Insert Roles
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_ADMIN
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_USER
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_GUEST
+
+
+        # Insert Users
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: name, value: "Andrey" }
+              - column: { name: surname, value: "Pryahin" }
+              - column: { name: email, value: "admin@gmail.com" }
+              - column: { name: password, value: "$2a$10$rOs0QwAp7K2ExOubGHatzOb3vbwFqw956fZlgcQCpxa4TiG1zEeku" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: name, value: "Artyom" }
+              - column: { name: surname, value: "Ostanin" }
+              - column: { name: email, value: "user@gmail.com" }
+              - column: { name: password, value: "$2a$10$rOs0QwAp7K2ExOubGHatzOb3vbwFqw956fZlgcQCpxa4TiG1zEeku" }
+
+
+        # Insert Users Roles
+        - insert:
+            tableName: users_roles
+            columns:
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: role_id, valueNumeric: 1 }
+        - insert:
+            tableName: users_roles
+            columns:
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: role_id, valueNumeric: 2 }
+        - insert:
+            tableName: users_roles
+            columns:
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: role_id, valueNumeric: 2 }
+
+
+        # Insert Cards
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: encrypted_number, value: "1111222233334444" }
+              - column: { name: masked_suffix, value: "4444" }
+              - column: { name: balance, valueNumeric: 1000 }
+              - column: { name: status, value: "ACTIVE" }
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: expiration_date, valueDate: 2026-12-09T00:00:00 }
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: encrypted_number, value: "5555666677778888" }
+              - column: { name: masked_suffix, value: "8888" }
+              - column: { name: balance, valueNumeric: 500 }
+              - column: { name: status, value: "ACTIVE" }
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: expiration_date, valueDate: 2026-12-09T00:00:00 }
+
+
+        # Insert Notifications
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: type, value: "INFO" }
+              - column: { name: message, value: "Welcome Andrey!" }
+              - column: { name: read, valueBoolean: false }
+              - column: { name: user_id, valueNumeric: 1 }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: type, value: "INFO" }
+              - column: { name: message, value: "Welcome Artyom!" }
+              - column: { name: read, valueBoolean: false }
+              - column: { name: user_id, valueNumeric: 2 }

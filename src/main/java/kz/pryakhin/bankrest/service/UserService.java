@@ -124,7 +124,7 @@ public class UserService implements UserDetailsService {
 
 		user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
 
-		Optional<Role> optionalRole = roleRepository.findByName("ROLE_USER");
+		Optional<Role> optionalRole = roleRepository.findByName("ROLE_GUEST");
 		optionalRole.ifPresent(role -> user.setRoles(Set.of(role)));
 
 		return userMapper.toDto(userRepository.save(user));

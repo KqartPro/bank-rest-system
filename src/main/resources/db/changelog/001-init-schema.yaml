@@ -3,6 +3,8 @@ databaseChangeLog:
       id: 001-init-schema
       author: andrey
       changes:
+
+        # Users Table
         - createTable:
             tableName: users
             columns:
@@ -35,6 +37,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
+
+        # Roles Table
         - createTable:
             tableName: roles
             columns:
@@ -51,6 +55,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
+
+        # Users Roles
         - createTable:
             tableName: users_roles
             columns:
@@ -60,14 +66,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: roles_id
+                  name: role_id
                   type: BIGINT
                   constraints:
                     nullable: false
 
         - addPrimaryKey:
             tableName: users_roles
-            columnNames: user_id, roles_id
+            columnNames: user_id, role_id
             constraintName: pk_users_roles
 
         - addForeignKeyConstraint:
@@ -76,14 +82,17 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
             constraintName: fk_users_roles_user
+            onDelete: CASCADE
 
         - addForeignKeyConstraint:
             baseTableName: users_roles
-            baseColumnNames: roles_id
+            baseColumnNames: role_id
             referencedTableName: roles
             referencedColumnNames: id
             constraintName: fk_users_roles_role
 
+
+        # Cards Table
         - createTable:
             tableName: cards
             columns:
@@ -120,6 +129,11 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: true
+              - column:
+                  name: masked_suffix
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
 
         - addForeignKeyConstraint:
             baseTableName: cards
@@ -127,3 +141,107 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
             constraintName: fk_cards_user
+
+
+        # Notifications Table
+        - createTable:
+            tableName: notifications
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: message
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: read
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+
+        - addForeignKeyConstraint:
+            baseTableName: notifications
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_notifications_user
+            onDelete: CASCADE
+
+
+        # Transfers Table
+        - createTable:
+            tableName: transfers
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: sender_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: recipient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: amount
+                  type: DECIMAL(19,2)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: transfers
+            baseColumnNames: sender_id
+            referencedTableName: cards
+            referencedColumnNames: id
+            constraintName: fk_transfers_sender
+
+        - addForeignKeyConstraint:
+            baseTableName: transfers
+            baseColumnNames: recipient_id
+            referencedTableName: cards
+            referencedColumnNames: id
+            constraintName: fk_transfers_recipient
